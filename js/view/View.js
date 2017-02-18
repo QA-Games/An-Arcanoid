@@ -1,6 +1,10 @@
 var drawBall = function (ball, color) {
 	ctx.fillStyle = color;
 	ctx.fillRect(ball.x, ball.y, ball.width, ball.height);
+	ctx.beginPath();
+	ctx.arc(ball.x + ball.width / 2, ball.y + ball.height / 2, 14, 0, Math.PI*2, true);
+	ctx.closePath();
+	ctx.fill();
 };
 
 var drawPlayer = function (player, color){
