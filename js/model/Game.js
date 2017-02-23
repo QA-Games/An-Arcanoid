@@ -35,16 +35,14 @@ var Game = function(ball, player, score){
 	};	
 
 	var stageClear = function(){
-		var broken = 0;
-		for(var i = 0; i < blocks.length; i++){
-			if(blocks[i].status == false){
-			broken++;
-				if(broken == blocks.length){
-					levelComplete = true;
-					return levelComplete;
-				 }
-			}			
+		console.log(blocks);
+		if(blocks.length == 0){
+			levelComplete = true;
+			return
 		}
+		else{
+
+		}		
 	};
 	eventKeyboard(keyboard);
 	generateBlocks(blocks);
