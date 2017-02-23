@@ -1,6 +1,7 @@
-var Game = function(ball, player){
+var Game = function(ball, player, score){
 	this.ball = ball;
 	this.player = player;
+	this.score = score;
 	var start = false;
 	var pause = false;
 	var lose =	false;
@@ -52,6 +53,7 @@ var Game = function(ball, player){
 		drawBlock(blocks, "red");
 		drawBall(this.ball, "#00ff00");
 		drawPlayer(this.player, "blue");
+		drawScore(this.score);
 		this.ball.x = this.player.x + 40;
 		this.player.movement(keyboard);
 	};
@@ -90,9 +92,11 @@ var Game = function(ball, player){
 			var update = this.ball.moviment(this.player);
 			var updatePlayer = this.player.movement(keyboard);
 			this.ball.blockColision(blocks);
+			this.score.incrementScore(blocks);
 			drawBall(this.ball, "#00ff00");
 			drawPlayer(this.player, "blue");
 			drawBlock(blocks, "red");
+			drawScore(this.score);
 			stageClear();
 			restartGame(keyboard);
 			pauseGame(keyboard);
@@ -102,6 +106,7 @@ var Game = function(ball, player){
 			drawBall(this.ball, "#00ff00");
 			drawPlayer(this.player, "blue");
 			drawBlock(blocks, "red");
+			drawScore(this.score);
 			restartGame(keyboard);
 			pauseGame(keyboard);
 		}else if(lose && !levelComplete){
@@ -109,11 +114,13 @@ var Game = function(ball, player){
 			drawGameOver();
 			drawBall(this.ball, "#00ff00");
 			drawPlayer(this.player, "blue");
-			drawBlock(blocks, "red");	
+			drawBlock(blocks, "red");
+			drawScore(this.score);	
 		}else if(levelComplete){
 			drawLevelComplete();
 			drawBall(this.ball, "#00ff00");
 			drawPlayer(this.player, "blue");
+			drawScore(this.score);
 		}
 	};
 };
