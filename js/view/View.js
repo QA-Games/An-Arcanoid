@@ -29,3 +29,8 @@ var drawLevelComplete = function(){
 	ctx.fillStyle = "Green";
 	ctx.fillText("Level Complete!",300,300);
 };
+
+var drawScore = function(score){
+	ctx.fillStyle = "Black";
+	ctx.fillText("Score:" + score.score, score.x, score.y);
+}
