@@ -38,3 +38,9 @@ var drawScore = function(score){
 	ctx.font = "18px Arial";
 	ctx.fillText("Score:" + score.score, score.x, score.y);
 };
+
+var drawLife = function(){
+	ctx.fillStyle = "Black";
+	ctx.font = "18px Arial";
+	ctx.fillText("Lifes: 3", 530, 25);
+};
