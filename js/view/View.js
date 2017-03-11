@@ -23,6 +23,7 @@ var drawBlock = function (block_array, color){
 
 var drawGameOver = function(){
 	ctx.font = "30px Arial";
+	ctx.fillStyle = "Red";
 	ctx.fillText("GAME OVER YEAHHHH!!!!!",100,200);
 };
 
@@ -34,5 +35,6 @@ var drawLevelComplete = function(){
 
 var drawScore = function(score){
 	ctx.fillStyle = "Black";
+	ctx.font = "18px Arial";
 	ctx.fillText("Score:" + score.score, score.x, score.y);
 };
