@@ -22,7 +22,8 @@ var drawBlock = function (block_array, color){
 };
 
 var drawGameOver = function(){
-	ctx.fillText("GAME OVER YEAHHHH!!!!!",300,300);
+	ctx.font = "30px Arial";
+	ctx.fillText("GAME OVER YEAHHHH!!!!!",100,200);
 };
 
 var drawLevelComplete = function(){
