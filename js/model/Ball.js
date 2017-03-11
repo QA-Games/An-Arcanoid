@@ -42,6 +42,7 @@ var Ball = function (x, y, height, width, speed) {
 	this.moviment = function(player){
 		if(this.x + this.width >= player.x && this.x <= player.x + player.width && this.y + this.height >= player.y){
 			this.diry = -1;
+			this.mod += 0.1;
 			this.direction = 1;
 		}else if(this.x <= 0){
 			this.dirx = 1;

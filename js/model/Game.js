@@ -7,12 +7,12 @@ var Game = function(ball, player){
 	var levelComplete = false;
 	var keyboard = {};
 	var blocks = new Array();
-	var testLevel = 9;
+	var testLevel = 4;
 
 	var generateBlocks = function(blocks){
 		var insertX = 20;
 		var qty = testLevel * 9;
-		var insertY = canvas.height / 2;
+		var insertY = canvas.height / 2 - 70;
 		var distance = 30;
 		var max = 580;
 		var tipsLines = 0;
