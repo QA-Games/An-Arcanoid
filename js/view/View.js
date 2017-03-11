@@ -31,3 +31,8 @@ var drawLevelComplete = function(){
 	ctx.font = "30px Arial";
 	ctx.fillText("Level Complete!",190,200);
 };
+
+var drawScore = function(score){
+	ctx.fillStyle = "Black";
+	ctx.fillText("Score:" + score.score, score.x, score.y);
+};
