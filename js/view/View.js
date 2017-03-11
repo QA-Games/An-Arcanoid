@@ -28,5 +28,6 @@ var drawGameOver = function(){
 
 var drawLevelComplete = function(){
 	ctx.fillStyle = "Green";
-	ctx.fillText("Level Complete!",300,300);
+	ctx.font = "30px Arial";
+	ctx.fillText("Level Complete!",190,200);
 };
