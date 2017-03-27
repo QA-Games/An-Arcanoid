@@ -1,18 +1,19 @@
-var Game = function(ball, player){
+var Game = function(ball, player, score){
 	this.ball = ball;
 	this.player = player;
+	this.score = score;
 	var start = false;
 	var pause = false;
 	var lose =	false;
 	var levelComplete = false;
 	var keyboard = {};
 	var blocks = new Array();
-	var testLevel = 9;
+	var testLevel = 4;
 
 	var generateBlocks = function(blocks){
 		var insertX = 20;
 		var qty = testLevel * 9;
-		var insertY = canvas.height / 2;
+		var insertY = canvas.height / 2 - 70;
 		var distance = 30;
 		var max = 580;
 		var tipsLines = 0;
@@ -34,16 +35,14 @@ var Game = function(ball, player){
 	};	
 
 	var stageClear = function(){
-		var broken = 0;
-		for(var i = 0; i < blocks.length; i++){
-			if(blocks[i].status == false){
-			broken++;
-				if(broken == blocks.length){
-					levelComplete = true;
-					return levelComplete;
-				 }
-			}			
+		console.log(blocks);
+		if(blocks.length == 0){
+			levelComplete = true;
+			return
 		}
+		else{
+
+		}		
 	};
 	eventKeyboard(keyboard);
 	generateBlocks(blocks);
@@ -52,6 +51,7 @@ var Game = function(ball, player){
 		drawBlock(blocks, "red");
 		drawBall(this.ball, "#00ff00");
 		drawPlayer(this.player, "blue");
+		drawScore(this.score);
 		this.ball.x = this.player.x + 40;
 		this.player.movement(keyboard);
 	};
@@ -90,9 +90,11 @@ var Game = function(ball, player){
 			var update = this.ball.moviment(this.player);
 			var updatePlayer = this.player.movement(keyboard);
 			this.ball.blockColision(blocks);
+			this.score.incrementScore(blocks);
 			drawBall(this.ball, "#00ff00");
 			drawPlayer(this.player, "blue");
 			drawBlock(blocks, "red");
+			drawScore(this.score);
 			stageClear();
 			restartGame(keyboard);
 			pauseGame(keyboard);
@@ -102,6 +104,7 @@ var Game = function(ball, player){
 			drawBall(this.ball, "#00ff00");
 			drawPlayer(this.player, "blue");
 			drawBlock(blocks, "red");
+			drawScore(this.score);
 			restartGame(keyboard);
 			pauseGame(keyboard);
 		}else if(lose && !levelComplete){
@@ -109,11 +112,13 @@ var Game = function(ball, player){
 			drawGameOver();
 			drawBall(this.ball, "#00ff00");
 			drawPlayer(this.player, "blue");
-			drawBlock(blocks, "red");	
+			drawBlock(blocks, "red");
+			drawScore(this.score);	
 		}else if(levelComplete){
 			drawLevelComplete();
 			drawBall(this.ball, "#00ff00");
 			drawPlayer(this.player, "blue");
+			drawScore(this.score);
 		}
 	};
 };
