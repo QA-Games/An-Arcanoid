@@ -44,7 +44,12 @@ var Game = function (canvas, ctx) {
         },
 
         update: function() {
-            if (37 in _this.keyboard && this.x > 0) {			
+            this.move();
+            this.checkBallCollision();
+        },
+
+        move: function() {
+            if (37 in _this.keyboard && this.x > 0) {		
                 this.x -= this.speed;
                 return;
             }
@@ -52,6 +57,18 @@ var Game = function (canvas, ctx) {
             if (39 in _this.keyboard && this.x + this.width < _this.canvas.width) {
                 this.x += this.speed;
                 return
+            }
+        },
+
+        checkBallCollision: function () {
+            var ballCollided = 
+                _this.ball.x + _this.ball.width >= this.x &&
+                _this.ball.x <= this.x + this.width &&
+                _this.ball.y + _this.ball.height >= this.y;
+
+            if (ballCollided) {
+                _this.ball.directionY = -1;
+                _this.ball.move();
             }
         }
 
@@ -82,7 +99,7 @@ var Game = function (canvas, ctx) {
             _this.ctx.beginPath();
             _this.ctx.arc(
                 this.x + this.width / 2,
-                (this.y + 55) + this.height / 2,
+                this.y + this.height / 2,
                 20,
                 0,
                 2 * Math.PI
@@ -92,22 +109,15 @@ var Game = function (canvas, ctx) {
         },
 
         update: function() {
-            if (this.x <= 0) {
-                this.directionX = 1;
-            }
+            if (this.x <= 0) this.directionX = 1;
+            if (this.x + this.width >= _this.canvas.width) this.directionX = -1;
+            if (this.y <= 0) this.directionY = 1;
+            if (this.y + this.height >= _this.canvas.height) this.directionY = -1;
 
-            if (this.x + this.width >= _this.canvas.width) {
-                this.directionX = -1;
-            }
+            this.move();    
+        },
 
-            if (this.y <= 0) {
-                this.directionY = 1
-            }
-
-            if (this.y + this.height >= _this.canvas.height) {
-                this.directionY = -1
-            }
-    
+        move: function() {
             this.x += (this.speed + this.modifier) * this.directionX;
             this.y += (this.speed + this.modifier) * this.directionY;
         }

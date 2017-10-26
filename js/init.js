@@ -4,8 +4,8 @@
     var canvas = document.createElement('canvas');
     var ctx = canvas.getContext('2d');
     
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    canvas.width = 600;
+    canvas.height = 400;
     
     document.body.appendChild(canvas);
     
