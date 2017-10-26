@@ -2,6 +2,8 @@
 
 let Game = function (_canvas, _ctx) {
 
+    //Propierties
+
     const _this = this;
     
     const canvas = _canvas;
@@ -14,7 +16,7 @@ let Game = function (_canvas, _ctx) {
         NEXT_LEVEL: 'NEXT_LEVEL',
         NOT_STARTED: 'NOT_STARTED',
         PAUSED: 'PAUSED',
-        STARTED: 'STARTED',
+        RUNNING: 'RUNNING'
     }
 
     let currentState = GAME_STATES.NOT_STARTED;
@@ -22,7 +24,12 @@ let Game = function (_canvas, _ctx) {
     //Methods
     _this.init = init;
 
-    //Propierties
+    function setGameState(newGameState) {
+        if (newGameState in GAME_STATES) {
+            currentState = newGameState;
+        } 
+    }
+
 
     function eventKeyboard() {
         document.addEventListener('keydown', function(e){
@@ -88,8 +95,6 @@ let Game = function (_canvas, _ctx) {
     };
 
 
-
-
     let ball = {
         height: 30,
         width: 30,
@@ -139,9 +144,6 @@ let Game = function (_canvas, _ctx) {
 
 
 
-
-
-
     function init () {
         eventKeyboard();
         player.init();
@@ -160,9 +162,26 @@ let Game = function (_canvas, _ctx) {
         ball.draw();
     };
 
-    function run () {        
-        update();
-        draw();
+    function run () {
+
+        switch (currentState) {
+
+            case GAME_STATES.NOT_STARTED:
+                player.init();
+                ball.init();
+                if (32 in keyboard) setGameState(GAME_STATES.RUNNING);        
+                break;
+            case GAME_STATES.RUNNING:
+                update();
+                draw();
+                if (27 in keyboard) setGameState(GAME_STATES.PAUSED);        
+                break;
+            case GAME_STATES.PAUSED:
+                draw();
+                if (32 in keyboard) setGameState(GAME_STATES.RUNNING);        
+                break;
+        }
+
         setTimeout(run, 1000/FPS);
     };
 
