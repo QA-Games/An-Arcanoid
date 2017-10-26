@@ -1,31 +1,42 @@
 'use strict';
 
-var Game = function (canvas, ctx) {
+let Game = function (_canvas, _ctx) {
 
     const _this = this;
+    
+    const canvas = _canvas;
+    const ctx = _ctx;
+    const FPS = 100;
+    let keyboard = {};
 
-    _this.canvas = canvas;
-    _this.ctx = ctx;
-    _this.FPS = 100;
-    _this.keyboard = {};
+    const GAME_STATES = {
+        ENDED: 'ENDED',
+        NEXT_LEVEL: 'NEXT_LEVEL',
+        NOT_STARTED: 'NOT_STARTED',
+        PAUSED: 'PAUSED',
+        STARTED: 'STARTED',
+    }
 
+    let currentState = GAME_STATES.NOT_STARTED;
 
+    //Methods
+    _this.init = init;
 
+    //Propierties
 
-    _this.eventKeyboard = function () {
+    function eventKeyboard() {
         document.addEventListener('keydown', function(e){
-            _this.keyboard[e.keyCode] = true;
+            keyboard[e.keyCode] = true;
         }, false);
     
         document.addEventListener('keyup', function(e){
-            delete _this.keyboard[e.keyCode];	
+            delete keyboard[e.keyCode];	
         }, false);
-    };
-
+    }
 
 
     
-    _this.player = {
+    let player = {
         height: 30,
         width: 160,
         x: 0,
@@ -34,13 +45,14 @@ var Game = function (canvas, ctx) {
         color: '#0000ff',
 
         init: function () {
-            this.x = (_this.canvas.width / 2) - (this.width / 2);
-            this.y = (_this.canvas.height - this.height - 10);
+            this.x = (canvas.width / 2) - (this.width / 2);
+            this.y = (canvas.height - this.height - 10);
+            this.draw();
         },
 
         draw: function() {
-            _this.ctx.fillStyle = this.color;
-            _this.ctx.fillRect(this.x, this.y, this.width, this.height);
+            ctx.fillStyle = this.color;
+            ctx.fillRect(this.x, this.y, this.width, this.height);
         },
 
         update: function() {
@@ -49,26 +61,26 @@ var Game = function (canvas, ctx) {
         },
 
         move: function() {
-            if (37 in _this.keyboard && this.x > 0) {		
+            if (37 in keyboard && this.x > 0) {		
                 this.x -= this.speed;
                 return;
             }
             
-            if (39 in _this.keyboard && this.x + this.width < _this.canvas.width) {
+            if (39 in keyboard && this.x + this.width < canvas.width) {
                 this.x += this.speed;
-                return
+                return;
             }
         },
 
         checkBallCollision: function () {
-            var ballCollided = 
-                _this.ball.x + _this.ball.width >= this.x &&
-                _this.ball.x <= this.x + this.width &&
-                _this.ball.y + _this.ball.height >= this.y;
+            let ballCollided = 
+                ball.x + ball.width >= this.x &&
+                ball.x <= this.x + this.width &&
+                ball.y + ball.height >= this.y;
 
             if (ballCollided) {
-                _this.ball.directionY = -1;
-                _this.ball.move();
+                ball.directionY = -1;
+                ball.move();
             }
         }
 
@@ -78,7 +90,7 @@ var Game = function (canvas, ctx) {
 
 
 
-    _this.ball = {
+    let ball = {
         height: 30,
         width: 30,
         x: 0,
@@ -90,29 +102,30 @@ var Game = function (canvas, ctx) {
         modifier: 0,
 
         init: function() {
-            this.x = (_this.canvas.width / 2) - (this.width / 2);
-            this.y = (_this.canvas.height - this.height - 100);
+            this.x = (canvas.width / 2) - (this.width / 2);
+            this.y = (canvas.height - this.height - 100);
+            this.draw();
         },
 
         draw: function() {
-            _this.ctx.fillStyle = this.color;
-            _this.ctx.beginPath();
-            _this.ctx.arc(
+            ctx.fillStyle = this.color;
+            ctx.beginPath();
+            ctx.arc(
                 this.x + this.width / 2,
                 this.y + this.height / 2,
                 20,
                 0,
                 2 * Math.PI
             );
-            _this.ctx.closePath();
-            _this.ctx.fill();
+            ctx.closePath();
+            ctx.fill();
         },
 
         update: function() {
             if (this.x <= 0) this.directionX = 1;
-            if (this.x + this.width >= _this.canvas.width) this.directionX = -1;
+            if (this.x + this.width >= canvas.width) this.directionX = -1;
             if (this.y <= 0) this.directionY = 1;
-            if (this.y + this.height >= _this.canvas.height) this.directionY = -1;
+            if (this.y + this.height >= canvas.height) this.directionY = -1;
 
             this.move();    
         },
@@ -129,28 +142,28 @@ var Game = function (canvas, ctx) {
 
 
 
-    _this.init = function () {
-        _this.eventKeyboard();
-        _this.player.init();
-        _this.ball.init();
-        _this.run();
+    function init () {
+        eventKeyboard();
+        player.init();
+        ball.init();
+        run();
     };
 
-    _this.update = function () {
-        _this.player.update();
-        _this.ball.update();
+    function update () {
+        player.update();
+        ball.update();
     };
 
-    _this.draw = function () {
-        _this.ctx.clearRect(0, 0, _this.canvas.width, _this.canvas.height);
-        _this.player.draw();
-        _this.ball.draw();
+    function draw () {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        player.draw();
+        ball.draw();
     };
 
-    _this.run = function () {        
-        _this.update();
-        _this.draw();
-        setTimeout(_this.run, 1000/_this.FPS);
+    function run () {        
+        update();
+        draw();
+        setTimeout(run, 1000/FPS);
     };
 
 };
