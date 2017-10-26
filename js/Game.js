@@ -31,7 +31,7 @@ var Game = function (canvas, ctx) {
         x: 0,
         y: 0,
         speed: 6,
-        color: 'blue',
+        color: '#0000ff',
 
         init: function () {
             this.x = (_this.canvas.width / 2) - (this.width / 2);
@@ -67,12 +67,12 @@ var Game = function (canvas, ctx) {
         x: 0,
         y: 0,
         speed: 1,
-        color: 'red',
+        color: '#00ff00',
         directionX: -1,
         directionY: -1,
         modifier: 0,
 
-        init: function () {
+        init: function() {
             this.x = (_this.canvas.width / 2) - (this.width / 2);
             this.y = (_this.canvas.height - this.height - 100);
         },
@@ -89,6 +89,27 @@ var Game = function (canvas, ctx) {
             );
             _this.ctx.closePath();
             _this.ctx.fill();
+        },
+
+        update: function() {
+            if (this.x <= 0) {
+                this.directionX = 1;
+            }
+
+            if (this.x + this.width >= _this.canvas.width) {
+                this.directionX = -1;
+            }
+
+            if (this.y <= 0) {
+                this.directionY = 1
+            }
+
+            if (this.y + this.height >= _this.canvas.height) {
+                this.directionY = -1
+            }
+    
+            this.x += (this.speed + this.modifier) * this.directionX;
+            this.y += (this.speed + this.modifier) * this.directionY;
         }
 
     };
@@ -107,6 +128,7 @@ var Game = function (canvas, ctx) {
 
     _this.update = function () {
         _this.player.update();
+        _this.ball.update();
     };
 
     _this.draw = function () {
