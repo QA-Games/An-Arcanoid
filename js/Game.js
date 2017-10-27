@@ -100,6 +100,7 @@ let Game = function (_canvas, _ctx) {
 
             if (ballCollided) {
                 ball.directionY = -1;
+                ball.modifier += 0.09;
                 ball.move();
             }
         }
