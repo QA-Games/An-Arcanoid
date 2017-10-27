@@ -2,14 +2,24 @@
 
 let Game = function (_canvas, _ctx) {
 
-    //Propierties
-
-    const _this = this;
+    //Properties
     
+    const _this = this;
     const canvas = _canvas;
     const ctx = _ctx;
-    const FPS = 100;
+
+    let FPS = 100;
+    let frames = 0;
+
+    let currentLevel = 1;
+    
     let keyboard = {};
+    const KEYBOARD_KEYS = {
+        SPACE: 32,
+        RIGHT_ARROW: 39,
+        LEFT_ARROW: 37,
+        ESC: 27
+    };
 
     const GAME_STATES = {
         ENDED: 'ENDED',
@@ -17,32 +27,41 @@ let Game = function (_canvas, _ctx) {
         NOT_STARTED: 'NOT_STARTED',
         PAUSED: 'PAUSED',
         RUNNING: 'RUNNING'
-    }
+    };
 
     let currentState = GAME_STATES.NOT_STARTED;
 
-    //Methods
-    _this.init = init;
+    let score = {
+        x: canvas.width - 100,
+        y: 40,
+        value: 0,
+        increment: function (_increment) {
+            this.value += _increment;
+        },
+        draw: function () {
+            ctx.fillStyle = '#000';
+            ctx.font = '18px Arial';
+            ctx.fillText('Score: ' + this.value, this.x, this.y);
+        }
+    };
 
-    function setGameState(newGameState) {
-        if (newGameState in GAME_STATES) {
-            currentState = newGameState;
-        } 
-    }
+    let life = {
+        x: canvas.width - 100,
+        y: 20,
+        value: 2,
+        decrement: function() {
+            this.value --;
+        },
+        increment: function() {
+            this.value ++;
+        },
+        draw: function() {
+            ctx.fillStyle = '#000';
+            ctx.font = '18px Arial';
+            ctx.fillText('Lifes: ' + this.value, this.x, this.y);
+        }
+    };
 
-
-    function eventKeyboard() {
-        document.addEventListener('keydown', function(e){
-            keyboard[e.keyCode] = true;
-        }, false);
-    
-        document.addEventListener('keyup', function(e){
-            delete keyboard[e.keyCode];	
-        }, false);
-    }
-
-
-    
     let player = {
         height: 30,
         width: 160,
@@ -68,12 +87,12 @@ let Game = function (_canvas, _ctx) {
         },
 
         move: function() {
-            if (37 in keyboard && this.x > 0) {		
+            if (KEYBOARD_KEYS.LEFT_ARROW in keyboard && this.x > 0) {		
                 this.x -= this.speed;
                 return;
             }
             
-            if (39 in keyboard && this.x + this.width < canvas.width) {
+            if (KEYBOARD_KEYS.RIGHT_ARROW in keyboard && this.x + this.width < canvas.width) {
                 this.x += this.speed;
                 return;
             }
@@ -94,7 +113,6 @@ let Game = function (_canvas, _ctx) {
 
     };
 
-
     let ball = {
         height: 30,
         width: 30,
@@ -109,6 +127,8 @@ let Game = function (_canvas, _ctx) {
         init: function() {
             this.x = (canvas.width / 2) - (this.width / 2);
             this.y = (canvas.height - this.height - 100);
+            this.directionX = -1;
+            this.directionY = -1;
             this.draw();
         },
 
@@ -130,7 +150,7 @@ let Game = function (_canvas, _ctx) {
             if (this.x <= 0) this.directionX = 1;
             if (this.x + this.width >= canvas.width) this.directionX = -1;
             if (this.y <= 0) this.directionY = 1;
-            if (this.y + this.height >= canvas.height) this.directionY = -1;
+            if (this.y + this.height >= canvas.height) setGameState(GAME_STATES.ENDED);
 
             this.move();    
         },
@@ -142,7 +162,31 @@ let Game = function (_canvas, _ctx) {
 
     };
 
+    //Methods
+    
+    init();
 
+    function setGameState(newGameState) {
+        if (newGameState in GAME_STATES) {
+            currentState = newGameState;
+        } 
+    }
+
+    function eventKeyboard() {
+        document.addEventListener('keydown', function(e){
+            keyboard[e.keyCode] = true;
+        }, false);
+    
+        document.addEventListener('keyup', function(e){
+            delete keyboard[e.keyCode];	
+        }, false);
+    }
+    
+    function gameOver() {
+        ctx.font = '30px Arial';
+        ctx.fillStyle = 'Red';
+        ctx.fillText('GAME OVER YEAHHHH!!!!!', 100, 200);
+    }
 
     function init () {
         eventKeyboard();
@@ -160,6 +204,8 @@ let Game = function (_canvas, _ctx) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         player.draw();
         ball.draw();
+        score.draw();
+        life.draw();
     };
 
     function run () {
@@ -167,22 +213,31 @@ let Game = function (_canvas, _ctx) {
         switch (currentState) {
 
             case GAME_STATES.NOT_STARTED:
-                player.init();
-                ball.init();
-                if (32 in keyboard) setGameState(GAME_STATES.RUNNING);        
+                draw();
+                if (KEYBOARD_KEYS.SPACE in keyboard) setGameState(GAME_STATES.RUNNING);        
                 break;
             case GAME_STATES.RUNNING:
                 update();
                 draw();
-                if (27 in keyboard) setGameState(GAME_STATES.PAUSED);        
+                if (KEYBOARD_KEYS.ESC in keyboard) setGameState(GAME_STATES.PAUSED);        
                 break;
             case GAME_STATES.PAUSED:
                 draw();
-                if (32 in keyboard) setGameState(GAME_STATES.RUNNING);        
+                if (KEYBOARD_KEYS.SPACE in keyboard) setGameState(GAME_STATES.RUNNING);        
+                break;
+            case GAME_STATES.ENDED:
+                if (life.value) {
+                    life.decrement();
+                    player.init();
+                    ball.init();
+                    setGameState(GAME_STATES.RUNNING)
+                    break;
+                }
+                gameOver();        
                 break;
         }
 
+        frames ++;
         setTimeout(run, 1000/FPS);
     };
-
 };

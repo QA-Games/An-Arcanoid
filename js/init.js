@@ -1,6 +1,6 @@
 'use strict';
 
-//(function(){
+(function(){
     let canvas = document.createElement('canvas');
     let ctx = canvas.getContext('2d');
     
@@ -10,5 +10,4 @@
     document.body.appendChild(canvas);
     
     let game = new Game(canvas, ctx);
-    game.init();
-//})();
+})();
