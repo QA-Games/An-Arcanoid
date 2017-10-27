@@ -2,16 +2,13 @@
 
 let Game = function (_canvas, _ctx) {
 
-    //Properties
-    
+    //Properties    
     const _this = this;
     const canvas = _canvas;
     const ctx = _ctx;
 
     let FPS = 100;
     let frames = 0;
-
-    let currentLevel = 1;
     
     let keyboard = {};
     const KEYBOARD_KEYS = {
@@ -51,9 +48,6 @@ let Game = function (_canvas, _ctx) {
         value: 2,
         decrement: function() {
             this.value --;
-        },
-        increment: function() {
-            this.value ++;
         },
         draw: function() {
             ctx.fillStyle = '#000';
@@ -109,8 +103,6 @@ let Game = function (_canvas, _ctx) {
                 ball.move();
             }
         }
-
-
     };
 
     let ball = {
@@ -127,7 +119,6 @@ let Game = function (_canvas, _ctx) {
         init: function() {
             this.x = (canvas.width / 2) - (this.width / 2);
             this.y = (canvas.height - this.height - 100);
-            this.directionX = -1;
             this.directionY = -1;
             this.draw();
         },
@@ -159,7 +150,6 @@ let Game = function (_canvas, _ctx) {
             this.x += (this.speed + this.modifier) * this.directionX;
             this.y += (this.speed + this.modifier) * this.directionY;
         }
-
     };
 
     //Methods
