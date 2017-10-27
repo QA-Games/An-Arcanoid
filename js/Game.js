@@ -28,6 +28,18 @@ let Game = function (_canvas, _ctx) {
 
     let currentState = GAME_STATES.NOT_STARTED;
 
+    let display = {
+        x: 100,
+        y: 200,
+        color: '#ff0000',
+        font: '30px Arial',
+        draw: function(text, _color, _font) {
+            ctx.fillStyle = typeof _color != 'undefined' ? _color : this.color;
+            ctx.font = typeof _font != 'undefined' ? _font : this.font;
+            ctx.fillText(text, this.x, this.y);
+        }
+    };
+
     let score = {
         x: canvas.width - 100,
         y: 40,
@@ -172,12 +184,6 @@ let Game = function (_canvas, _ctx) {
             delete keyboard[e.keyCode];	
         }, false);
     }
-    
-    function gameOver() {
-        ctx.font = '30px Arial';
-        ctx.fillStyle = 'Red';
-        ctx.fillText('GAME OVER YEAHHHH!!!!!', 100, 200);
-    }
 
     function init () {
         eventKeyboard();
@@ -224,7 +230,7 @@ let Game = function (_canvas, _ctx) {
                     setGameState(GAME_STATES.RUNNING)
                     break;
                 }
-                gameOver();        
+                display.draw('GAME OVER YEAHHHH!!!!!');        
                 break;
         }
 
