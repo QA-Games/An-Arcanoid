@@ -28,6 +28,75 @@ let Game = function (_canvas, _ctx) {
 
     let currentState = GAME_STATES.NOT_STARTED;
 
+    let Block = {
+        x: 0,
+        y: 0,
+        width: 25,
+        height: 15,
+        color: '#ff0000',
+        init: function(_x, _y) {
+            this.x = _x;
+            this.y = _y;
+        },
+        checkCollision: function() {
+            let ballCollided = 
+                ball.x + ball.width >= this.x &&
+                ball.x <= this.x + this.width &&
+                ball.y <= this.y + this.height &&
+                ball.y + ball.height >= this.y;
+            
+                if (ballCollided) {
+                    ball.directionX = ball.directionX == 1 ? -1 : 1;
+                    ball.directionY = ball.directionY == 1 ? -1 : 1;
+                    score.increment(10);
+                    return true;
+                }
+            return false;
+        },
+        draw: function() {
+            ctx.fillStyle = this.color;
+			ctx.fillRect(this.x, this.y, this.width, this.height);
+        }
+    };
+
+    let blocksGroup = {
+        list: [],
+        init: function() {
+            let distanceX = 5;
+            let screenHalf = canvas.height / 2;
+            let minWidth = 30;
+            let maxWidth = canvas.width - 30;
+
+            let blocksQuantity = (maxWidth - minWidth) / (Block.width + distanceX);
+
+            let x = minWidth;
+            let y = screenHalf / 2;
+
+            for (var i = 0; i < blocksQuantity; i ++) {
+                let block = Object.create(Block);
+                block.init(x, y);
+                x += (block.width + distanceX);
+                this.list.push(block);
+            }
+        },
+        update: function() {
+            this.list.forEach((block, index) => {
+                if (block.checkCollision()) {
+                    delete this.list[index];
+                }
+            });
+
+            this.list = this.list.filter(function(item) { 
+                return item != 'undefined' 
+            });
+        },
+        draw: function() {
+            this.list.forEach(function(block) {
+               block.draw(); 
+            });
+        }
+    };
+
     let display = {
         x: 100,
         y: 200,
@@ -189,12 +258,14 @@ let Game = function (_canvas, _ctx) {
         eventKeyboard();
         player.init();
         ball.init();
+        blocksGroup.init();
         run();
     };
 
     function update () {
         player.update();
         ball.update();
+        blocksGroup.update();
     };
 
     function draw () {
@@ -203,6 +274,7 @@ let Game = function (_canvas, _ctx) {
         ball.draw();
         score.draw();
         life.draw();
+        blocksGroup.draw();
     };
 
     function run () {
