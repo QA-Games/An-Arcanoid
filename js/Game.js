@@ -288,7 +288,8 @@ let Game = function (_canvas, _ctx) {
             case GAME_STATES.RUNNING:
                 update();
                 draw();
-                if (KEYBOARD_KEYS.ESC in keyboard) setGameState(GAME_STATES.PAUSED);        
+                if (KEYBOARD_KEYS.ESC in keyboard) setGameState(GAME_STATES.PAUSED);
+                if (!blocksGroup.list.length) setGameState(GAME_STATES.NEXT_LEVEL);
                 break;
             case GAME_STATES.PAUSED:
                 draw();
@@ -303,6 +304,9 @@ let Game = function (_canvas, _ctx) {
                     break;
                 }
                 display.draw('GAME OVER YEAHHHH!!!!!');        
+                break;
+            case GAME_STATES.NEXT_LEVEL:
+                display.draw('LEVEL COMPLETED!!!');
                 break;
         }
 
