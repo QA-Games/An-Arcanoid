@@ -15,6 +15,7 @@ export function Player() {
 
     _this.draw = draw;
     _this.update = update;
+    _this.init = init;
 
     init();
 

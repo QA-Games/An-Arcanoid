@@ -4,7 +4,8 @@ import { Engine } from './Engine.js';
 import { Player } from './components/Player.js';
 import { Ball } from './components/Ball.js';
 import { BlockGroup } from './components/BlockGroup.js';
-import { Score } from './components/Score.js'
+import { Score } from './components/Score.js';
+import { Level } from './components/Level.js';
 
 export function Game(config) {
 
@@ -39,12 +40,14 @@ export function Game(config) {
         _this.Player = new Player();
         _this.BlockGroup = new BlockGroup();
         _this.Score = new Score();
+        _this.Level = new Level();
         
         _this.components = [
             _this.Ball,
             _this.Player,
             _this.BlockGroup,
-            _this.Score
+            _this.Score,
+            _this.Level
         ];
 
         setGameState(GAME_STATES.NOT_STARTED.key);
@@ -73,6 +76,12 @@ export function Game(config) {
 
     function nextLevel() {
         Engine.display.draw('LEVEL COMPLETED!!!');
+        _this.Level.increment();
+        _this.Ball.init();
+        _this.Ball.modifier = _this.Ball.modifier / 2;
+        _this.Player.init();
+        _this.BlockGroup.init();
+        setGameState(GAME_STATES.NOT_STARTED.key);
     }
 
     function notStarted() {

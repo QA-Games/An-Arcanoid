@@ -19,6 +19,7 @@ export function Ball() {
     _this.draw = draw;
     _this.update = update;
     _this.move = move;
+    _this.init = init;
 
     init();
 

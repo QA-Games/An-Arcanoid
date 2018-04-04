@@ -11,6 +11,7 @@ export function BlockGroup() {
 
     _this.update = update;
     _this.draw = draw;
+    _this.init = init;
 
     init();
 
